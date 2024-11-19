@@ -15,6 +15,11 @@ jobs:
       - name: Set up Nushell
         uses: hustcer/setup-nu@v3
 
+      - name: Set environment variables
+        run: |
+          echo "GITHUB_EVENT_RELEASE_TAG_NAME=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          echo "GITHUB_EVENT_RELEASE_NAME=${{ github.event.release.name }}" >> $GITHUB_ENV
+
       - name: Validate changelog version
         id: validate
         run: nu ./nu-scripts/validate_changelog.nu
