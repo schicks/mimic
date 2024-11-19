@@ -1,6 +1,6 @@
 
 let latest_version = (open package.json | get version)
-let changelog_version = (open CHANGELOG.md | lines | first 1 | split-column ' ' | get column1 | str trim '[##]')
+let changelog_version = (open CHANGELOG.md | lines | first 1 | split column ' ' | get column1 | str trim '[##]')
 let release_version = $env.GITHUB_EVENT_RELEASE_TAG_NAME
 let release_name = $env.GITHUB_EVENT_RELEASE_NAME
 
