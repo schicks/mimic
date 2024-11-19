@@ -12,25 +12,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up Nushell
+        uses: hustcer/setup-nu@v3
+
       - name: Validate changelog version
         id: validate
-        run: |
-          latest_version=$(jq -r '.version' package.json)
-          changelog_version=$(grep -m 1 -oP '^## \[\K[^\]]+' CHANGELOG.md)
-          release_version=${{ github.event.release.tag_name }}
-          release_name=${{ github.event.release.name }}
-          if [ "$latest_version" != "$changelog_version" ]; then
-            echo "Changelog version ($changelog_version) does not match package version ($latest_version)"
-            exit 1
-          fi
-          if [ "$latest_version" != "$release_version" ]; then
-            echo "Release version ($release_version) does not match package version ($latest_version)"
-            exit 1
-          fi
-          if [ "$latest_version" != "$release_name" ]; then
-            echo "Release name ($release_name) does not match package version ($latest_version)"
-            exit 1
-          fi
+        shell: nu {0}
+        run: nu-scripts/validate_changelog.nu
 
   build-and-attach-vsix:
     needs: validate-changelog
